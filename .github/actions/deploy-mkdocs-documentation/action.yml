@@ -1,0 +1,63 @@
+name: MkDocs build and deploy
+
+inputs:
+  MKDOCS_VERSION:
+    type: string
+    required: false
+    default: "latest"
+    description: "MkDocs version to use"
+  REQUIREMENTS:
+    type: string
+    required: false
+    default: "./docs/requirements.txt"
+    description: "Path to the requirements.txt file"
+  CONFIG_FILE:
+    type: string
+    required: false
+    default: "mkdocs.yml"
+    description: "Path to the mkdocs.yml file"
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: "recursive"
+
+    - name: Setup Pages
+      id: pages
+      uses: actions/configure-pages@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.x
+
+    - name: Install MkDocs and Dependencies
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        if [ "${{ inputs.MKDOCS_VERSION }}" = "latest" ]; then
+          pip install mkdocs-material
+        else
+          pip install mkdocs-material==${{ inputs.MKDOCS_VERSION }}
+        fi
+        if [ -f ${{ inputs.REQUIREMENTS }} ]; then
+          pip install -r ${{ inputs.REQUIREMENTS }}
+        fi
+
+    - name: Build MkDocs Site
+      shell: bash
+      run: mkdocs build --config-file ${{ inputs.CONFIG_FILE }}
+
+    - name: Upload pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        name: "github-pages"
+        path: "./site"
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
+      with:
+        artifact_name: "github-pages"
