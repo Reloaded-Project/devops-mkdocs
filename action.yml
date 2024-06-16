@@ -1,4 +1,4 @@
-name: MkDocs build and deploy
+name: Build and Deploy MkDocs Material (Reloaded)
 
 inputs:
   MKDOCS_VERSION:
