@@ -2,10 +2,12 @@ name: Test MkDocs Workflow
 
 on:
   schedule:
-    - cron: '0 0 * * 0' # Run every Sunday at midnight
+    - cron: '0 0 * * *' # Run daily at midnight
   workflow_dispatch:
   push:
     branches: [ master ]
+    tags:
+      - 'v1'
     paths:
       - 'action.yml'
       - '.github/workflows/test-mkdocs-workflow.yml'
