@@ -1,5 +1,8 @@
 name: Build and Deploy MkDocs Material (Reloaded)
 description: Builds and/or Deploys MkDocs Material to GitHub Pages, or a Directory
+branding:
+  icon: 'book'
+  color: 'red'
 
 inputs:
   mkdocs-version:
