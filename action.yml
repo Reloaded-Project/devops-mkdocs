@@ -1,4 +1,5 @@
 name: Build and Deploy MkDocs Material (Reloaded)
+description: Builds and/or Deploys MkDocs Material to GitHub Pages, or a Directory
 
 inputs:
   MKDOCS_VERSION:
@@ -35,6 +36,11 @@ inputs:
     required: false
     default: "bash"
     description: "Shell to use for running the pre-build script"
+  OUTPUT_DIRECTORY:
+    type: string
+    required: false
+    default: "./site"
+    description: "Custom output directory for the MkDocs build"
 
 runs:
   using: "composite"
@@ -73,14 +79,14 @@ runs:
 
     - name: Build MkDocs Site
       shell: bash
-      run: mkdocs build --config-file "${{ inputs.CONFIG_FILE }}"
+      run: mkdocs build --config-file "${{ inputs.CONFIG_FILE }}" --site-dir "${{ inputs.OUTPUT_DIRECTORY }}"  # Updated command
 
     - name: Upload pages artifact
       if: ${{ inputs.PUBLISH_TO_PAGES }}
       uses: actions/upload-pages-artifact@v3
       with:
         name: "github-pages"
-        path: "./site"
+        path: "${{ inputs.OUTPUT_DIRECTORY }}"
 
     - name: Deploy to GitHub Pages
       if: ${{ inputs.PUBLISH_TO_PAGES }}

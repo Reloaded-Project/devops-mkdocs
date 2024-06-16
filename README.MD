@@ -70,6 +70,7 @@ The action supports the following input parameters:
 - `CONFIG_FILE`: (Optional) The path to your MkDocs configuration file. Defaults to `mkdocs.yml` in the repository root.
 - `PUBLISH_TO_PAGES`: (Optional) Whether to publish the generated site to GitHub Pages. Defaults to `true`.
 - `CHECKOUT_CURRENT_REPO`: (Optional) Whether to perform a repository checkout before building the site. Defaults to `true`.
+- `OUTPUT_DIRECTORY`: (Optional) Location of the built MkDocs site. Defaults to `./site`.
 - `PRE_BUILD_SCRIPT`: (Optional) The path to a pre-build script to run before building the site.
 - `PRE_BUILD_SHELL`: (Optional) The shell to use for running the pre-build script. Defaults to `bash`.
 
