@@ -38,7 +38,7 @@ jobs:
       - name: Test Custom MkDocs Version
         uses: Reloaded-Project/devops-mkdocs@v1
         with:
-          mkdocs-version: '9.2.0'
+          mkdocs-version: '9.5.24'
           checkout-current-repo: false
 
       - name: Test Disable Checkout
