@@ -31,5 +31,5 @@ jobs:
       - name: Deploy MkDocs
         uses: Reloaded-Project/devops-mkdocs@v1
         with:
-          REQUIREMENTS: docs/requirements.txt
-          CHECKOUT_CURRENT_REPO: false
+          requirements: docs/requirements.txt
+          checkout-current-repo: false

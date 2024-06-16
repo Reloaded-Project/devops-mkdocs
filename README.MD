@@ -43,9 +43,9 @@ jobs:
       - name: Deploy MkDocs
         uses: Reloaded-Project/devops-mkdocs@v1
         with:
-          REQUIREMENTS: ./docs/requirements.txt
-          PUBLISH_TO_PAGES: true
-          CHECKOUT_CURRENT_REPO: true # Checks out by default.
+          requirements: ./docs/requirements.txt
+          publish-to-pages: true
+          checkout-current-repo: true # Checks out by default.
 ```
 
 ## Setup
@@ -65,14 +65,14 @@ repository (or update the `CONFIG_FILE` parameter in the workflow).
 
 The action supports the following input parameters:
 
-- `MKDOCS_VERSION`: (Optional) The version of MkDocs to use. Defaults to `latest`. This corresponds to the version in the Python package index.
-- `REQUIREMENTS`: (Optional) The path to a `requirements.txt` file listing additional Python dependencies. Defaults to `./docs/requirements.txt`.
-- `CONFIG_FILE`: (Optional) The path to your MkDocs configuration file. Defaults to `mkdocs.yml` in the repository root.
-- `PUBLISH_TO_PAGES`: (Optional) Whether to publish the generated site to GitHub Pages. Defaults to `true`.
-- `CHECKOUT_CURRENT_REPO`: (Optional) Whether to perform a repository checkout before building the site. Defaults to `true`.
-- `OUTPUT_DIRECTORY`: (Optional) Location of the built MkDocs site. Defaults to `./site`.
-- `PRE_BUILD_SCRIPT`: (Optional) The path to a pre-build script to run before building the site.
-- `PRE_BUILD_SHELL`: (Optional) The shell to use for running the pre-build script. Defaults to `bash`.
+- `mkdocs-version`: (Optional) The version of MkDocs to use. Defaults to `latest`. This corresponds to the version in the Python package index.
+- `requirements`: (Optional) The path to a `requirements.txt` file listing additional Python dependencies. Defaults to `./docs/requirements.txt`.
+- `config-file`: (Optional) The path to your MkDocs configuration file. Defaults to `mkdocs.yml` in the repository root.
+- `publish-to-pages`: (Optional) Whether to publish the generated site to GitHub Pages. Defaults to `true`.
+- `checkout-current-repo`: (Optional) Whether to perform a repository checkout before building the site. Defaults to `true`.
+- `output-directory`: (Optional) Location of the built MkDocs site. Defaults to `./site`.
+- `pre-build-script`: (Optional) The path to a pre-build script to run before building the site.
+- `pre-build-shell`: (Optional) The shell to use for running the pre-build script. Defaults to `bash`.
 
 ### Workflow Triggers
 
