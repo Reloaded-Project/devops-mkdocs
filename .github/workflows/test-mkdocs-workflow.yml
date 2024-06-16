@@ -34,17 +34,20 @@ jobs:
         uses: Reloaded-Project/devops-mkdocs@v1
         with:
           checkout-current-repo: false
+          publish-to-pages: false
 
       - name: Test Custom MkDocs Version
         uses: Reloaded-Project/devops-mkdocs@v1
         with:
           mkdocs-version: '9.5.24'
           checkout-current-repo: false
+          publish-to-pages: false
 
       - name: Test Disable Checkout
         uses: Reloaded-Project/devops-mkdocs@v1
         with:
           checkout-current-repo: false
+          publish-to-pages: false
 
       - name: Create Pre-build Script (Bash)
         shell: bash
@@ -60,6 +63,7 @@ jobs:
           pre-build-script: pre-build-bash.sh
           pre-build-shell: bash
           checkout-current-repo: false
+          publish-to-pages: false
 
       - name: Assert Pre-build Script Execution (Bash)
         shell: bash
@@ -83,6 +87,7 @@ jobs:
           pre-build-script: pre-build-pwsh.ps1
           pre-build-shell: pwsh
           checkout-current-repo: false
+          publish-to-pages: false
 
       - name: Assert Pre-build Script Execution (PowerShell)
         shell: pwsh
@@ -97,6 +102,7 @@ jobs:
         with:
           output-directory: docs/_site
           checkout-current-repo: false
+          publish-to-pages: false
 
       - name: Assert Custom Output Directory
         shell: bash
@@ -115,6 +121,7 @@ jobs:
         with:
           requirements: docs/custom-requirements.txt
           checkout-current-repo: false
+          publish-to-pages: false
 
       - name: Copy Custom Config File
         shell: bash
@@ -125,6 +132,7 @@ jobs:
         with:
           config-file: docs/custom-mkdocs.yml
           checkout-current-repo: false
+          publish-to-pages: false
 
       - name: Test Publish to Pages
         uses: Reloaded-Project/devops-mkdocs@v1
