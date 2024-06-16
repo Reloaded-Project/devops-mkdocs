@@ -14,7 +14,9 @@
 
 This is a simple action that can be used to create an MkDocs page and upload it to GitHub Pages.
 
-Complete Example (`.github/workflows/mkdocs.yml`):
+## Example Usage
+
+`.github/workflows/mkdocs.yml`:
 
 ```yaml
 name: MkDocs Build and Deploy
@@ -44,8 +46,8 @@ jobs:
         uses: Reloaded-Project/devops-mkdocs@v1
         with:
           requirements: ./docs/requirements.txt
-          publish-to-pages: true # Default
-          checkout-current-repo: true # Checks out by default.
+          publish-to-pages: true
+          checkout-current-repo: true
 ```
 
 ## Setup
@@ -54,56 +56,91 @@ To use this action in your own repository:
 
 1. Create a new workflow file (e.g., `.github/workflows/mkdocs.yml`) in your repository.
 2. Copy the example usage code from above into the new workflow file.
-3. If you have additional Python dependencies, create a `requirements.txt` file in your `docs` directory and list them there. 
+3. If you have additional Python dependencies, create a `requirements.txt` file in your `docs` 
+   directory and list them there.
 
 Ensure your MkDocs configuration file is named `mkdocs.yml` and located in the root of your
-repository (or update the `CONFIG_FILE` parameter in the workflow).
+repository (or update the `config-file` parameter in the workflow).
 
 ## Configuration
 
 ### Inputs
 
-The action supports the following input parameters:
-
-- `mkdocs-version`: (Optional) The version of MkDocs to use. Defaults to `latest`. This corresponds to the version in the Python package index.
-- `requirements`: (Optional) The path to a `requirements.txt` file listing additional Python dependencies. Defaults to `./docs/requirements.txt`.
-- `config-file`: (Optional) The path to your MkDocs configuration file. Defaults to `mkdocs.yml` in the repository root.
-- `publish-to-pages`: (Optional) Whether to publish the generated site to GitHub Pages. Defaults to `true`.
-- `checkout-current-repo`: (Optional) Whether to perform a repository checkout before building the site. Defaults to `true`.
-- `output-directory`: (Optional) Location of the built MkDocs site. Defaults to `./site`.
-- `pre-build-command`: (Optional) The path to a pre-build command to run before building the site.
-- `pre-build-command-shell`: (Optional) The shell to use for running the pre-build command. Defaults to `bash`.
+| Input                     | Required | Default                   | Description                                    |
+| ------------------------- | -------- | ------------------------- | ---------------------------------------------- |
+| `mkdocs-version`          | No       | `latest`                  | MkDocs version to use                          |
+| `requirements`            | No       | `./docs/requirements.txt` | Path to the requirements.txt file              |
+| `config-file`             | No       | `mkdocs.yml`              | Path to the mkdocs.yml file                    |
+| `publish-to-pages`        | No       | `true`                    | Whether to publish to GitHub Pages             |
+| `checkout-current-repo`   | No       | `true`                    | Whether to perform repository checkout         |
+| `output-directory`        | No       | `./site`                  | Custom output directory for the MkDocs build   |
+| `pre-build-command`       | No       |                           | Path to the pre-build command                  |
+| `pre-build-command-shell` | No       | `bash`                    | Shell to use for running the pre-build command |
 
 ### Workflow Triggers
 
 By default, the example workflow runs on:
 
-- Pushes to the `main` branch that modify the `mkdocs.yml` file or files in the `docs/` directory. 
-- Pull requests targeting the `main` branch that modify the `mkdocs.yml` file or files in the `docs/` directory.
+- Pushes to the `main` branch that modify the `mkdocs.yml` file or files in the `docs/` directory.
+- Pull requests targeting the `main` branch that modify the `mkdocs.yml` file or files in the 
+  `docs/` directory.
 - Manual runs triggered via the `workflow_dispatch` event.
 
 Modify the `on` section of the workflow as needed for your desired trigger conditions.
 
+## Examples
+
+Find more examples in [the tests](./.github/workflows/test-mkdocs-workflow.yml).
+
+### Custom MkDocs Version
+
+```yaml
+- name: Deploy MkDocs
+  uses: Reloaded-Project/devops-mkdocs@v1
+  with:
+    mkdocs-version: '9.5.24'
+```
+
+### Custom Pre-build Command (Bash)
+
+```yaml
+- name: Deploy MkDocs
+  uses: Reloaded-Project/devops-mkdocs@v1
+  with:
+    pre-build-command: touch pre-build-bash-executed.txt
+    pre-build-command-shell: bash
+```
+
+### Custom Output Directory
+
+```yaml
+- name: Deploy MkDocs
+  uses: Reloaded-Project/devops-mkdocs@v1
+  with:
+    output-directory: custom_site_dir
+```
+
 ## Viewing the Generated Docs
 
-After a successful run, the generated static site will be available on the GitHub Pages site for your repository. 
+After a successful run, the generated static site will be available on the GitHub Pages site for
+your repository.
 
 To find the URL:
 
 1. Navigate to your repository on GitHub.
 2. Go to the "Settings" tab.
 3. Click on "Pages" in the side navigation.
-4. The GitHub Pages URL will be listed at the top, in the format `https://<user>.github.io/<repo>/`.
+4. The GitHub Pages URL will be listed at the top, in the format 
+   `https://<user>.github.io/<repo>/`.
 
 ## Why this Exists?
 
-The previous actions for MkDocs that I've used always relied on some sort of virtualization,
-e.g. the use of Docker.
+Previous actions for MkDocs that I've used relied on virtualization, such as Docker. This was slow
+and sometimes inflexible, for example, the Docker image may not have the latest version of MkDocs
+if not configured properly.
 
-Not only was that slow, but sometimes it was not very flexible, for example, the docker
-image may not have seen the latest version of MkDocs, if it was not well configured.
-
-This action directly invokes `pip` and `python` on the host machine.
+This action directly invokes `pip` and `python` on the host machine for improved performance and
+flexibility.
 
 ## Contributing
 
