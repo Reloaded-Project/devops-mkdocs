@@ -32,4 +32,4 @@ jobs:
         uses: Reloaded-Project/devops-mkdocs@v1
         with:
           REQUIREMENTS: docs/requirements.txt
-          CHECKOUT: false
+          CHECKOUT_CURRENT_REPO: false

@@ -21,7 +21,7 @@ inputs:
     required: false
     default: true
     description: "Whether to publish to GitHub Pages"
-  CHECKOUT:
+  CHECKOUT_CURRENT_REPO:
     type: boolean
     required: false
     default: true
@@ -40,7 +40,7 @@ runs:
   using: "composite"
   steps:
     - name: Checkout Repository
-      if: ${{ inputs.CHECKOUT }}
+      if: ${{ inputs.CHECKOUT_CURRENT_REPO }}
       uses: actions/checkout@v4
       with:
         submodules: "recursive"
