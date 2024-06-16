@@ -1,0 +1,85 @@
+name: Build and Deploy MkDocs Material (Reloaded)
+description: Builds and/or Deploys MkDocs Material to GitHub Pages, or a Directory
+
+inputs:
+  mkdocs-version:
+    required: false
+    default: "latest"
+    description: "MkDocs version to use"
+  requirements:
+    required: false
+    default: "./docs/requirements.txt"
+    description: "Path to the requirements.txt file"
+  config-file:
+    required: false
+    default: "mkdocs.yml"
+    description: "Path to the mkdocs.yml file"
+  publish-to-pages:
+    required: false
+    default: "true"
+    description: "Whether to publish to GitHub Pages"
+  checkout-current-repo:
+    required: false
+    default: "true"
+    description: "Whether to perform repository checkout"
+  pre-build-command:
+    required: false
+    description: "Path to the pre-build command"
+  pre-build-command-shell:
+    required: false
+    default: "bash"
+    description: "Shell to use for running the pre-build command"
+  output-directory:
+    required: false
+    default: "./site"
+    description: "Custom output directory for the MkDocs build"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout Repository
+      if: ${{ inputs.checkout-current-repo == 'true' }}
+      uses: actions/checkout@v4
+      with:
+        submodules: "recursive"
+
+    - name: Setup Pages
+      if: ${{ inputs.publish-to-pages == 'true' }}
+      id: pages
+      uses: actions/configure-pages@v4
+
+    - name: Install MkDocs and Dependencies
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        if [ "${{ inputs.mkdocs-version }}" = "latest" ]; then
+          pip install mkdocs-material
+        else
+          pip install mkdocs-material==${{ inputs.mkdocs-version }}
+        fi
+        if [ -f "${{ inputs.requirements }}" ]; then
+          pip install -r "${{ inputs.requirements }}"
+        fi
+
+    - name: Run Pre-build Command
+      if: ${{ inputs.pre-build-command }}
+      shell: ${{ inputs.pre-build-command-shell }}
+      run: ${{ inputs.pre-build-command }}
+
+    - name: Build MkDocs Site
+      shell: bash
+      run: mkdocs build --config-file "${{ inputs.config-file }}" --site-dir "${{ inputs.output-directory }}"
+
+    - name: Upload pages artifact
+      if: ${{ inputs.publish-to-pages == 'true' }}
+      uses: actions/upload-pages-artifact@v3
+      with:
+        name: "github-pages"
+        path: "${{ inputs.output-directory }}"
+
+    - name: Deploy to GitHub Pages
+      if: ${{ inputs.publish-to-pages == 'true' }}
+      id: deployment
+      uses: actions/deploy-pages@v4
+      with:
+        artifact_name: "github-pages"

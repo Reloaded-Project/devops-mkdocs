@@ -1,0 +1,168 @@
+name: Test MkDocs Workflow
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Run every Sunday at midnight
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+    paths:
+      - 'action.yml'
+      - '.github/workflows/test-mkdocs-workflow.yml'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'action.yml'
+      - '.github/workflows/test-mkdocs-workflow.yml'
+
+jobs:
+  test-default-parameters:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Test Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
+          submodules: 'recursive'
+      - name: Test Default Parameters
+        uses: Reloaded-Project/devops-mkdocs@v1
+        with:
+          checkout-current-repo: false
+          publish-to-pages: false
+
+  test-custom-mkdocs-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Test Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
+          submodules: 'recursive'
+      - name: Test Custom MkDocs Version
+        uses: Reloaded-Project/devops-mkdocs@v1
+        with:
+          mkdocs-version: '9.5.24'
+          checkout-current-repo: false
+          publish-to-pages: false
+
+  test-custom-pre-build-command-bash:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Test Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
+          submodules: 'recursive'
+      - name: Test Custom Pre-build Command (Bash)
+        uses: Reloaded-Project/devops-mkdocs@v1
+        with:
+          pre-build-command: touch pre-build-bash-executed.txt
+          pre-build-command-shell: bash
+          checkout-current-repo: false
+          publish-to-pages: false
+      - name: Assert Pre-build Command Execution (Bash)
+        shell: bash
+        run: |
+          if [ ! -f pre-build-bash-executed.txt ]; then
+            echo "Pre-build command (Bash) did not execute successfully"
+            exit 1
+          fi
+
+  test-custom-pre-build-command-pwsh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Test Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
+          submodules: 'recursive'
+      - name: Test Custom Pre-build Command (PowerShell)
+        uses: Reloaded-Project/devops-mkdocs@v1
+        with:
+          pre-build-command: New-Item -ItemType File -Path pre-build-pwsh-executed.txt
+          pre-build-command-shell: pwsh
+          checkout-current-repo: false
+          publish-to-pages: false
+      - name: Assert Pre-build Command Execution (PowerShell)
+        shell: pwsh
+        run: |
+          if (-not (Test-Path -Path pre-build-pwsh-executed.txt)) {
+            Write-Error "Pre-build command (PowerShell) did not execute successfully"
+            exit 1
+          }
+
+  test-custom-output-directory:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Test Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
+          submodules: 'recursive'
+      - name: Test Custom Output Directory
+        uses: Reloaded-Project/devops-mkdocs@v1
+        with:
+          output-directory: custom_site_dir
+          checkout-current-repo: false
+          publish-to-pages: false
+      - name: Assert Custom Output Directory
+        shell: bash
+        run: |
+          if [ ! -d custom_site_dir ] || [ -z "$(ls -A custom_site_dir)" ]; then
+            echo "Custom output directory does not exist or is empty"
+            exit 1
+          fi
+
+  test-custom-requirements-path:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Test Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
+          submodules: 'recursive'
+      - name: Copy Custom Requirements File
+        shell: bash
+        run: cp docs/requirements.txt docs/custom-requirements.txt
+      - name: Test Custom Requirements Path
+        uses: Reloaded-Project/devops-mkdocs@v1
+        with:
+          requirements: docs/custom-requirements.txt
+          checkout-current-repo: false
+          publish-to-pages: false
+
+  test-custom-config-file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Test Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
+          submodules: 'recursive'
+      - name: Copy Custom Config File
+        shell: bash
+        run: cp mkdocs.yml custom-mkdocs.yml
+      - name: Test Custom Config File
+        uses: Reloaded-Project/devops-mkdocs@v1
+        with:
+          config-file: custom-mkdocs.yml
+          checkout-current-repo: false
+          publish-to-pages: false
+
+  test-publish-to-pages:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout Test Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
+          submodules: 'recursive'
+      - name: Test Publish to Pages
+        uses: Reloaded-Project/devops-mkdocs@v1
+        with:
+          publish-to-pages: true
+          checkout-current-repo: false
