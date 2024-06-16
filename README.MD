@@ -41,13 +41,11 @@ jobs:
       id-token: write
     steps:
       - name: Deploy MkDocs
-        uses: Reloaded-Project/reloaded-project-configurations-rust/.github/actions/deploy-mkdocs-documentation@v1
+        uses: Reloaded-Project/devops-mkdocs@v1
         with:
           REQUIREMENTS: ./docs/requirements.txt
           PUBLISH_TO_PAGES: true
-          CHECKOUT: true
-          PRE_BUILD_SCRIPT: ./scripts/pre-build.sh
-          PRE_BUILD_SHELL: bash
+          CHECKOUT_CURRENT_REPO: true # Checks out by default.
 ```
 
 ## Setup

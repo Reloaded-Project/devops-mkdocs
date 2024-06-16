@@ -4,10 +4,23 @@ on:
   schedule:
     - cron: '0 0 * * 0' # Run every Sunday at midnight
   workflow_dispatch:
+  push:
+    branches: [ master ]
+    paths:
+      - 'action.yml'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'action.yml'
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
     steps:
       - name: Checkout Test Repository
         uses: actions/checkout@v4
