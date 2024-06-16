@@ -17,7 +17,10 @@ on:
 
 jobs:
   test-default-parameters:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Test Repository
         uses: actions/checkout@v4
@@ -31,7 +34,10 @@ jobs:
           publish-to-pages: false
 
   test-custom-mkdocs-version:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Test Repository
         uses: actions/checkout@v4
@@ -46,7 +52,10 @@ jobs:
           publish-to-pages: false
 
   test-custom-pre-build-command-bash:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Test Repository
         uses: actions/checkout@v4
@@ -69,7 +78,10 @@ jobs:
           fi
 
   test-custom-pre-build-command-pwsh:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Test Repository
         uses: actions/checkout@v4
@@ -92,7 +104,10 @@ jobs:
           }
 
   test-custom-output-directory:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Test Repository
         uses: actions/checkout@v4
@@ -114,7 +129,10 @@ jobs:
           fi
 
   test-custom-requirements-path:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Test Repository
         uses: actions/checkout@v4
@@ -132,7 +150,10 @@ jobs:
           publish-to-pages: false
 
   test-custom-config-file:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Test Repository
         uses: actions/checkout@v4
@@ -150,6 +171,7 @@ jobs:
           publish-to-pages: false
 
   test-publish-to-pages:
+    # This can only be ran on a single OS, due to artifact name conflict.
     runs-on: ubuntu-latest
     permissions:
       contents: read
