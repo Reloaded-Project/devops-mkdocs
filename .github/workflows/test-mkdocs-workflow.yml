@@ -8,10 +8,12 @@ on:
     branches: [ master ]
     paths:
       - 'action.yml'
+      - '.github/workflows/test-mkdocs-workflow.yml'
   pull_request:
     branches: [ master ]
     paths:
       - 'action.yml'
+      - '.github/workflows/test-mkdocs-workflow.yml'
 
 jobs:
   test:
