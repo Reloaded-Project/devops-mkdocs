@@ -16,26 +16,28 @@ on:
       - '.github/workflows/test-mkdocs-workflow.yml'
 
 jobs:
-  test:
+  test-default-parameters:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-
     steps:
       - name: Checkout Test Repository
         uses: actions/checkout@v4
         with:
           repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
           submodules: 'recursive'
-
       - name: Test Default Parameters
         uses: Reloaded-Project/devops-mkdocs@v1
         with:
           checkout-current-repo: false
           publish-to-pages: false
 
+  test-custom-mkdocs-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Test Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
+          submodules: 'recursive'
       - name: Test Custom MkDocs Version
         uses: Reloaded-Project/devops-mkdocs@v1
         with:
@@ -43,67 +45,89 @@ jobs:
           checkout-current-repo: false
           publish-to-pages: false
 
+  test-disable-checkout:
+    runs-on: ubuntu-latest
+    steps:
       - name: Test Disable Checkout
         uses: Reloaded-Project/devops-mkdocs@v1
         with:
           checkout-current-repo: false
           publish-to-pages: false
 
-      - name: Create Pre-build Script (Bash)
+  test-custom-pre-build-command-bash:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Test Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
+          submodules: 'recursive'
+      - name: Create Pre-build Command (Bash)
         shell: bash
         run: |
           echo '#!/bin/bash' > pre-build-bash.sh
-          echo 'echo "Running pre-build script (Bash)"' >> pre-build-bash.sh
+          echo 'echo "Running pre-build command (Bash)"' >> pre-build-bash.sh
           echo 'ls -l' >> pre-build-bash.sh
           echo 'touch pre-build-bash-executed.txt' >> pre-build-bash.sh
-
-      - name: Test Custom Pre-build Script (Bash)
+      - name: Test Custom Pre-build Command (Bash)
         uses: Reloaded-Project/devops-mkdocs@v1
         with:
-          pre-build-script: pre-build-bash.sh
-          pre-build-shell: bash
+          pre-build-command: pre-build-bash.sh
+          pre-build-command-shell: bash
           checkout-current-repo: false
           publish-to-pages: false
-
-      - name: Assert Pre-build Script Execution (Bash)
+      - name: Assert Pre-build Command Execution (Bash)
         shell: bash
         run: |
           if [ ! -f pre-build-bash-executed.txt ]; then
-            echo "Pre-build script (Bash) did not execute successfully"
+            echo "Pre-build command (Bash) did not execute successfully"
             exit 1
           fi
 
-      - name: Create Pre-build Script (PowerShell)
+  test-custom-pre-build-command-pwsh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Test Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
+          submodules: 'recursive'
+      - name: Create Pre-build Command (PowerShell)
         shell: pwsh
         run: |
           echo '#!/usr/bin/env pwsh' > pre-build-pwsh.ps1
-          echo 'Write-Output "Running pre-build script (PowerShell)"' >> pre-build-pwsh.ps1
+          echo 'Write-Output "Running pre-build command (PowerShell)"' >> pre-build-pwsh.ps1
           echo 'Get-ChildItem' >> pre-build-pwsh.ps1
           echo 'New-Item -ItemType File -Path pre-build-pwsh-executed.txt' >> pre-build-pwsh.ps1
-
-      - name: Test Custom Pre-build Script (PowerShell)
+      - name: Test Custom Pre-build Command (PowerShell)
         uses: Reloaded-Project/devops-mkdocs@v1
         with:
-          pre-build-script: pre-build-pwsh.ps1
-          pre-build-shell: pwsh
+          pre-build-command: pre-build-pwsh.ps1
+          pre-build-command-shell: pwsh
           checkout-current-repo: false
           publish-to-pages: false
-
-      - name: Assert Pre-build Script Execution (PowerShell)
+      - name: Assert Pre-build Command Execution (PowerShell)
         shell: pwsh
         run: |
           if (-not (Test-Path -Path pre-build-pwsh-executed.txt)) {
-            Write-Error "Pre-build script (PowerShell) did not execute successfully"
+            Write-Error "Pre-build command (PowerShell) did not execute successfully"
             exit 1
           }
 
+  test-custom-output-directory:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Test Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
+          submodules: 'recursive'
       - name: Test Custom Output Directory
         uses: Reloaded-Project/devops-mkdocs@v1
         with:
           output-directory: docs/_site
           checkout-current-repo: false
           publish-to-pages: false
-
       - name: Assert Custom Output Directory
         shell: bash
         run: |
@@ -112,10 +136,17 @@ jobs:
             exit 1
           fi
 
+  test-custom-requirements-path:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Test Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
+          submodules: 'recursive'
       - name: Copy Custom Requirements File
         shell: bash
         run: cp docs/requirements.txt docs/custom-requirements.txt
-
       - name: Test Custom Requirements Path
         uses: Reloaded-Project/devops-mkdocs@v1
         with:
@@ -123,10 +154,17 @@ jobs:
           checkout-current-repo: false
           publish-to-pages: false
 
+  test-custom-config-file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Test Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
+          submodules: 'recursive'
       - name: Copy Custom Config File
         shell: bash
         run: cp mkdocs.yml docs/custom-mkdocs.yml
-
       - name: Test Custom Config File
         uses: Reloaded-Project/devops-mkdocs@v1
         with:
@@ -134,6 +172,18 @@ jobs:
           checkout-current-repo: false
           publish-to-pages: false
 
+  test-publish-to-pages:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout Test Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
+          submodules: 'recursive'
       - name: Test Publish to Pages
         uses: Reloaded-Project/devops-mkdocs@v1
         with:

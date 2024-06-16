@@ -22,13 +22,13 @@ inputs:
     required: false
     default: "true"
     description: "Whether to perform repository checkout"
-  pre-build-script:
+  pre-build-command:
     required: false
-    description: "Path to the pre-build script"
-  pre-build-shell:
+    description: "Path to the pre-build command"
+  pre-build-command-shell:
     required: false
     default: "bash"
-    description: "Shell to use for running the pre-build script"
+    description: "Shell to use for running the pre-build command"
   output-directory:
     required: false
     default: "./site"
@@ -61,13 +61,10 @@ runs:
           pip install -r "${{ inputs.requirements }}"
         fi
 
-    - name: Run Pre-build Script
-      if: ${{ inputs.pre-build-script }}
-      shell: ${{ inputs.pre-build-shell }}
-      run: |
-        if [ -f "${{ inputs.pre-build-script }}" ]; then
-          ${{ inputs.pre-build-shell }} "${{ inputs.pre-build-script }}"
-        fi
+    - name: Run Pre-build Command
+      if: ${{ inputs.pre-build-command }}
+      shell: ${{ inputs.pre-build-command-shell }}
+      run: ${{ inputs.pre-build-command }}
 
     - name: Build MkDocs Site
       shell: bash

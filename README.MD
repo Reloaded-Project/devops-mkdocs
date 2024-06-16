@@ -44,7 +44,7 @@ jobs:
         uses: Reloaded-Project/devops-mkdocs@v1
         with:
           requirements: ./docs/requirements.txt
-          publish-to-pages: true
+          publish-to-pages: true # Default
           checkout-current-repo: true # Checks out by default.
 ```
 
@@ -71,8 +71,8 @@ The action supports the following input parameters:
 - `publish-to-pages`: (Optional) Whether to publish the generated site to GitHub Pages. Defaults to `true`.
 - `checkout-current-repo`: (Optional) Whether to perform a repository checkout before building the site. Defaults to `true`.
 - `output-directory`: (Optional) Location of the built MkDocs site. Defaults to `./site`.
-- `pre-build-script`: (Optional) The path to a pre-build script to run before building the site.
-- `pre-build-shell`: (Optional) The shell to use for running the pre-build script. Defaults to `bash`.
+- `pre-build-command`: (Optional) The path to a pre-build command to run before building the site.
+- `pre-build-command-shell`: (Optional) The shell to use for running the pre-build command. Defaults to `bash`.
 
 ### Workflow Triggers
 
