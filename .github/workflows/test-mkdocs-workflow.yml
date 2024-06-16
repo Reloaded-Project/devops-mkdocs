@@ -102,14 +102,14 @@ jobs:
       - name: Test Custom Output Directory
         uses: Reloaded-Project/devops-mkdocs@v1
         with:
-          output-directory: docs/_site
+          output-directory: custom_site_dir
           checkout-current-repo: false
           publish-to-pages: false
       - name: Assert Custom Output Directory
         shell: bash
         run: |
-          if [ ! -d docs/_site ]; then
-            echo "Custom output directory does not exist"
+          if [ ! -d custom_site_dir ] || [ -z "$(ls -A custom_site_dir)" ]; then
+            echo "Custom output directory does not exist or is empty"
             exit 1
           fi
 
