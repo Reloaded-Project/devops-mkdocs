@@ -16,22 +16,39 @@ inputs:
     required: false
     default: "mkdocs.yml"
     description: "Path to the mkdocs.yml file"
+  PUBLISH_TO_PAGES:
+    type: boolean
+    required: false
+    default: true
+    description: "Whether to publish to GitHub Pages"
+  CHECKOUT:
+    type: boolean
+    required: false
+    default: true
+    description: "Whether to perform repository checkout"
+  PRE_BUILD_SCRIPT:
+    type: string
+    required: false
+    description: "Path to the pre-build script"
+  PRE_BUILD_SHELL:
+    type: string
+    required: false
+    default: "bash"
+    description: "Shell to use for running the pre-build script"
 
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v4
+    - name: Checkout Repository
+      if: ${{ inputs.CHECKOUT }}
+      uses: actions/checkout@v4
       with:
         submodules: "recursive"
 
     - name: Setup Pages
+      if: ${{ inputs.PUBLISH_TO_PAGES }}
       id: pages
       uses: actions/configure-pages@v4
-
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.x
 
     - name: Install MkDocs and Dependencies
       shell: bash
@@ -42,21 +59,31 @@ runs:
         else
           pip install mkdocs-material==${{ inputs.MKDOCS_VERSION }}
         fi
-        if [ -f ${{ inputs.REQUIREMENTS }} ]; then
-          pip install -r ${{ inputs.REQUIREMENTS }}
+        if [ -f "${{ inputs.REQUIREMENTS }}" ]; then
+          pip install -r "${{ inputs.REQUIREMENTS }}"
+        fi
+
+    - name: Run Pre-build Script
+      if: ${{ inputs.PRE_BUILD_SCRIPT }}
+      shell: ${{ inputs.PRE_BUILD_SHELL }}
+      run: |
+        if [ -f "${{ inputs.PRE_BUILD_SCRIPT }}" ]; then
+          ${{ inputs.PRE_BUILD_SHELL }} "${{ inputs.PRE_BUILD_SCRIPT }}"
         fi
 
     - name: Build MkDocs Site
       shell: bash
-      run: mkdocs build --config-file ${{ inputs.CONFIG_FILE }}
+      run: mkdocs build --config-file "${{ inputs.CONFIG_FILE }}"
 
     - name: Upload pages artifact
+      if: ${{ inputs.PUBLISH_TO_PAGES }}
       uses: actions/upload-pages-artifact@v3
       with:
         name: "github-pages"
         path: "./site"
 
     - name: Deploy to GitHub Pages
+      if: ${{ inputs.PUBLISH_TO_PAGES }}
       id: deployment
       uses: actions/deploy-pages@v4
       with:

@@ -44,6 +44,10 @@ jobs:
         uses: Reloaded-Project/reloaded-project-configurations-rust/.github/actions/deploy-mkdocs-documentation@v1
         with:
           REQUIREMENTS: ./docs/requirements.txt
+          PUBLISH_TO_PAGES: true
+          CHECKOUT: true
+          PRE_BUILD_SCRIPT: ./scripts/pre-build.sh
+          PRE_BUILD_SHELL: bash
 ```
 
 ## Setup
@@ -66,6 +70,10 @@ The action supports the following input parameters:
 - `MKDOCS_VERSION`: (Optional) The version of MkDocs to use. Defaults to `latest`. This corresponds to the version in the Python package index.
 - `REQUIREMENTS`: (Optional) The path to a `requirements.txt` file listing additional Python dependencies. Defaults to `./docs/requirements.txt`.
 - `CONFIG_FILE`: (Optional) The path to your MkDocs configuration file. Defaults to `mkdocs.yml` in the repository root.
+- `PUBLISH_TO_PAGES`: (Optional) Whether to publish the generated site to GitHub Pages. Defaults to `true`.
+- `CHECKOUT`: (Optional) Whether to perform a repository checkout before building the site. Defaults to `true`.
+- `PRE_BUILD_SCRIPT`: (Optional) The path to a pre-build script to run before building the site.
+- `PRE_BUILD_SHELL`: (Optional) The shell to use for running the pre-build script. Defaults to `bash`.
 
 ### Workflow Triggers
 
