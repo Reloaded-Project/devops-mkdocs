@@ -28,8 +28,104 @@ jobs:
           repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
           submodules: 'recursive'
 
-      - name: Deploy MkDocs
+      - name: Test Default Parameters
         uses: Reloaded-Project/devops-mkdocs@v1
         with:
-          requirements: docs/requirements.txt
+          checkout-current-repo: false
+
+      - name: Test Custom MkDocs Version
+        uses: Reloaded-Project/devops-mkdocs@v1
+        with:
+          mkdocs-version: '9.2.0'
+          checkout-current-repo: false
+
+      - name: Test Disable Checkout
+        uses: Reloaded-Project/devops-mkdocs@v1
+        with:
+          checkout-current-repo: false
+
+      - name: Create Pre-build Script (Bash)
+        shell: bash
+        run: |
+          echo '#!/bin/bash' > pre-build-bash.sh
+          echo 'echo "Running pre-build script (Bash)"' >> pre-build-bash.sh
+          echo 'ls -l' >> pre-build-bash.sh
+          echo 'touch pre-build-bash-executed.txt' >> pre-build-bash.sh
+
+      - name: Test Custom Pre-build Script (Bash)
+        uses: Reloaded-Project/devops-mkdocs@v1
+        with:
+          pre-build-script: pre-build-bash.sh
+          pre-build-shell: bash
+          checkout-current-repo: false
+
+      - name: Assert Pre-build Script Execution (Bash)
+        shell: bash
+        run: |
+          if [ ! -f pre-build-bash-executed.txt ]; then
+            echo "Pre-build script (Bash) did not execute successfully"
+            exit 1
+          fi
+
+      - name: Create Pre-build Script (PowerShell)
+        shell: pwsh
+        run: |
+          echo '#!/usr/bin/env pwsh' > pre-build-pwsh.ps1
+          echo 'Write-Output "Running pre-build script (PowerShell)"' >> pre-build-pwsh.ps1
+          echo 'Get-ChildItem' >> pre-build-pwsh.ps1
+          echo 'New-Item -ItemType File -Path pre-build-pwsh-executed.txt' >> pre-build-pwsh.ps1
+
+      - name: Test Custom Pre-build Script (PowerShell)
+        uses: Reloaded-Project/devops-mkdocs@v1
+        with:
+          pre-build-script: pre-build-pwsh.ps1
+          pre-build-shell: pwsh
+          checkout-current-repo: false
+
+      - name: Assert Pre-build Script Execution (PowerShell)
+        shell: pwsh
+        run: |
+          if (-not (Test-Path -Path pre-build-pwsh-executed.txt)) {
+            Write-Error "Pre-build script (PowerShell) did not execute successfully"
+            exit 1
+          }
+
+      - name: Test Custom Output Directory
+        uses: Reloaded-Project/devops-mkdocs@v1
+        with:
+          output-directory: docs/_site
+          checkout-current-repo: false
+
+      - name: Assert Custom Output Directory
+        shell: bash
+        run: |
+          if [ ! -d docs/_site ]; then
+            echo "Custom output directory does not exist"
+            exit 1
+          fi
+
+      - name: Copy Custom Requirements File
+        shell: bash
+        run: cp docs/requirements.txt docs/custom-requirements.txt
+
+      - name: Test Custom Requirements Path
+        uses: Reloaded-Project/devops-mkdocs@v1
+        with:
+          requirements: docs/custom-requirements.txt
+          checkout-current-repo: false
+
+      - name: Copy Custom Config File
+        shell: bash
+        run: cp mkdocs.yml docs/custom-mkdocs.yml
+
+      - name: Test Custom Config File
+        uses: Reloaded-Project/devops-mkdocs@v1
+        with:
+          config-file: docs/custom-mkdocs.yml
+          checkout-current-repo: false
+
+      - name: Test Publish to Pages
+        uses: Reloaded-Project/devops-mkdocs@v1
+        with:
+          publish-to-pages: true
           checkout-current-repo: false
