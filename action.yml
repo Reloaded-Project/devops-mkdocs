@@ -3,41 +3,33 @@ description: Builds and/or Deploys MkDocs Material to GitHub Pages, or a Directo
 
 inputs:
   mkdocs-version:
-    type: string
     required: false
     default: "latest"
     description: "MkDocs version to use"
   requirements:
-    type: string
     required: false
     default: "./docs/requirements.txt"
     description: "Path to the requirements.txt file"
   config-file:
-    type: string
     required: false
     default: "mkdocs.yml"
     description: "Path to the mkdocs.yml file"
   publish-to-pages:
-    type: boolean
     required: false
-    default: true
+    default: "true"
     description: "Whether to publish to GitHub Pages"
   checkout-current-repo:
-    type: boolean
     required: false
-    default: true
+    default: "true"
     description: "Whether to perform repository checkout"
   pre-build-script:
-    type: string
     required: false
     description: "Path to the pre-build script"
   pre-build-shell:
-    type: string
     required: false
     default: "bash"
     description: "Shell to use for running the pre-build script"
   output-directory:
-    type: string
     required: false
     default: "./site"
     description: "Custom output directory for the MkDocs build"
@@ -46,13 +38,13 @@ runs:
   using: "composite"
   steps:
     - name: Checkout Repository
-      if: ${{ inputs.checkout-current-repo }}
+      if: ${{ inputs.checkout-current-repo == 'true' }}
       uses: actions/checkout@v4
       with:
         submodules: "recursive"
 
     - name: Setup Pages
-      if: ${{ inputs.publish-to-pages }}
+      if: ${{ inputs.publish-to-pages == 'true' }}
       id: pages
       uses: actions/configure-pages@v4
 
@@ -82,14 +74,14 @@ runs:
       run: mkdocs build --config-file "${{ inputs.config-file }}" --site-dir "${{ inputs.output-directory }}"
 
     - name: Upload pages artifact
-      if: ${{ inputs.publish-to-pages }}
+      if: ${{ inputs.publish-to-pages == 'true' }}
       uses: actions/upload-pages-artifact@v3
       with:
         name: "github-pages"
         path: "${{ inputs.output-directory }}"
 
     - name: Deploy to GitHub Pages
-      if: ${{ inputs.publish-to-pages }}
+      if: ${{ inputs.publish-to-pages == 'true' }}
       id: deployment
       uses: actions/deploy-pages@v4
       with:
