@@ -55,13 +55,25 @@ runs:
       shell: bash
       run: |
         python -m pip install --upgrade pip
-        if [ "${{ inputs.mkdocs-version }}" = "latest" ]; then
-          pip install mkdocs-material
-        else
-          pip install mkdocs-material==${{ inputs.mkdocs-version }}
-        fi
+        # If requirements.txt exists and contains mkdocs-material, install only from requirements
+        # (user has locked their mkdocs version). Otherwise, install mkdocs-material from
+        # mkdocs-version input alongside requirements to let pip resolve compatible versions.
         if [ -f "${{ inputs.requirements }}" ]; then
-          pip install -r "${{ inputs.requirements }}"
+          if grep -q "mkdocs-material" "${{ inputs.requirements }}"; then
+            pip install -r "${{ inputs.requirements }}"
+          else
+            if [ "${{ inputs.mkdocs-version }}" = "latest" ]; then
+              pip install mkdocs-material -r "${{ inputs.requirements }}"
+            else
+              pip install mkdocs-material==${{ inputs.mkdocs-version }} -r "${{ inputs.requirements }}"
+            fi
+          fi
+        else
+          if [ "${{ inputs.mkdocs-version }}" = "latest" ]; then
+            pip install mkdocs-material
+          else
+            pip install mkdocs-material==${{ inputs.mkdocs-version }}
+          fi
         fi
 
     - name: Run Pre-build Command

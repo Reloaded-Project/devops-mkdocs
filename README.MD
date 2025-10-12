@@ -120,6 +120,70 @@ Find more examples in [the tests](./.github/workflows/test-mkdocs-workflow.yml).
     output-directory: custom_site_dir
 ```
 
+### Locked Requirements for Reproducible Builds
+
+To guarantee your documentation builds consistently over time and avoid plugin version incompatibilities, 
+lock your dependencies using `pip-tools`.
+
+Assuming you have a local Python installation:
+
+Create a `docs/requirements.in` with MkDocs Material and your plugins:
+
+```txt
+mkdocs-material==9.5.24
+mkdocs-git-revision-date-localized-plugin
+mkdocs-awesome-pages-plugin
+mkdocs-minify-plugin
+```
+
+Generate locked `docs/requirements.txt`:
+
+```bash
+pip install pip-tools
+pip-compile docs/requirements.in -o docs/requirements.txt
+```
+
+Use in workflow:
+
+```yaml
+- name: Deploy MkDocs
+  uses: Reloaded-Project/devops-mkdocs@v1
+  with:
+    requirements: ./docs/requirements.txt
+```
+
+**Note:** If `mkdocs-material` is present in your `requirements.txt`, the action will install only 
+from the requirements file (ignoring the `mkdocs-version` input). If `mkdocs-material` is not in 
+your requirements, the action will install it from the `mkdocs-version` input alongside your 
+requirements, letting pip resolve compatible versions.
+
+To update dependencies, edit `docs/requirements.in` and regenerate:
+
+```bash
+pip-compile --upgrade docs/requirements.in -o docs/requirements.txt
+```
+
+#### Testing Locally
+
+Test locked requirements in a clean environment:
+
+```bash
+# Create and activate virtual environment
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+
+# Install pip-tools and generate locked requirements
+pip install pip-tools
+pip-compile docs/requirements.in -o docs/requirements.txt
+
+# Install and test
+pip install -r docs/requirements.txt
+mkdocs build
+
+# Deactivate when done
+deactivate
+```
+
 ## Viewing the Generated Docs
 
 After a successful run, the generated static site will be available on the GitHub Pages site for
