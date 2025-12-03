@@ -5,14 +5,14 @@ on:
     - cron: '0 0 * * *' # Run daily at midnight
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ v1-master ]
     tags:
       - 'v1'
     paths:
       - 'action.yml'
       - '.github/workflows/test-mkdocs-workflow.yml'
   pull_request:
-    branches: [ master ]
+    branches: [ v1-master ]
     paths:
       - 'action.yml'
       - '.github/workflows/test-mkdocs-workflow.yml'
