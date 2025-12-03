@@ -4,13 +4,6 @@ on:
   schedule:
     - cron: '0 0 * * *' # Run daily at midnight
   workflow_dispatch:
-  push:
-    branches: [ v1-master ]
-    tags:
-      - 'v1'
-    paths:
-      - 'action.yml'
-      - '.github/workflows/test-mkdocs-workflow.yml'
   pull_request:
     branches: [ v1-master ]
     paths:
@@ -24,14 +17,19 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Checkout Action Repository
+        uses: actions/checkout@v4
       - name: Checkout Test Repository
         uses: actions/checkout@v4
         with:
           repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
           submodules: 'recursive'
+          path: test-project
       - name: Test Default Parameters
-        uses: Reloaded-Project/devops-mkdocs@v1
+        uses: ./
         with:
+          config-file: test-project/mkdocs.yml
+          requirements: test-project/docs/requirements.txt
           checkout-current-repo: false
           publish-to-pages: false
 
@@ -41,14 +39,19 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Checkout Action Repository
+        uses: actions/checkout@v4
       - name: Checkout Test Repository
         uses: actions/checkout@v4
         with:
           repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
           submodules: 'recursive'
+          path: test-project
       - name: Test Custom MkDocs Version
-        uses: Reloaded-Project/devops-mkdocs@v1
+        uses: ./
         with:
+          config-file: test-project/mkdocs.yml
+          requirements: test-project/docs/requirements.txt
           mkdocs-version: '9.5.24'
           checkout-current-repo: false
           publish-to-pages: false
@@ -59,14 +62,19 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Checkout Action Repository
+        uses: actions/checkout@v4
       - name: Checkout Test Repository
         uses: actions/checkout@v4
         with:
           repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
           submodules: 'recursive'
+          path: test-project
       - name: Test Custom Pre-build Command (Bash)
-        uses: Reloaded-Project/devops-mkdocs@v1
+        uses: ./
         with:
+          config-file: test-project/mkdocs.yml
+          requirements: test-project/docs/requirements.txt
           pre-build-command: touch pre-build-bash-executed.txt
           pre-build-command-shell: bash
           checkout-current-repo: false
@@ -85,14 +93,19 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Checkout Action Repository
+        uses: actions/checkout@v4
       - name: Checkout Test Repository
         uses: actions/checkout@v4
         with:
           repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
           submodules: 'recursive'
+          path: test-project
       - name: Test Custom Pre-build Command (PowerShell)
-        uses: Reloaded-Project/devops-mkdocs@v1
+        uses: ./
         with:
+          config-file: test-project/mkdocs.yml
+          requirements: test-project/docs/requirements.txt
           pre-build-command: New-Item -ItemType File -Path pre-build-pwsh-executed.txt
           pre-build-command-shell: pwsh
           checkout-current-repo: false
@@ -111,14 +124,19 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Checkout Action Repository
+        uses: actions/checkout@v4
       - name: Checkout Test Repository
         uses: actions/checkout@v4
         with:
           repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
           submodules: 'recursive'
+          path: test-project
       - name: Test Custom Output Directory
-        uses: Reloaded-Project/devops-mkdocs@v1
+        uses: ./
         with:
+          config-file: test-project/mkdocs.yml
+          requirements: test-project/docs/requirements.txt
           output-directory: custom_site_dir
           checkout-current-repo: false
           publish-to-pages: false
@@ -136,18 +154,22 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Checkout Action Repository
+        uses: actions/checkout@v4
       - name: Checkout Test Repository
         uses: actions/checkout@v4
         with:
           repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
           submodules: 'recursive'
+          path: test-project
       - name: Copy Custom Requirements File
         shell: bash
-        run: cp docs/requirements.txt docs/custom-requirements.txt
+        run: cp test-project/docs/requirements.txt test-project/docs/custom-requirements.txt
       - name: Test Custom Requirements Path
-        uses: Reloaded-Project/devops-mkdocs@v1
+        uses: ./
         with:
-          requirements: docs/custom-requirements.txt
+          config-file: test-project/mkdocs.yml
+          requirements: test-project/docs/custom-requirements.txt
           checkout-current-repo: false
           publish-to-pages: false
 
@@ -157,18 +179,22 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Checkout Action Repository
+        uses: actions/checkout@v4
       - name: Checkout Test Repository
         uses: actions/checkout@v4
         with:
           repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
           submodules: 'recursive'
+          path: test-project
       - name: Copy Custom Config File
         shell: bash
-        run: cp mkdocs.yml custom-mkdocs.yml
+        run: cp test-project/mkdocs.yml test-project/custom-mkdocs.yml
       - name: Test Custom Config File
-        uses: Reloaded-Project/devops-mkdocs@v1
+        uses: ./
         with:
-          config-file: custom-mkdocs.yml
+          config-file: test-project/custom-mkdocs.yml
+          requirements: test-project/docs/requirements.txt
           checkout-current-repo: false
           publish-to-pages: false
 
@@ -180,13 +206,18 @@ jobs:
       pages: write
       id-token: write
     steps:
+      - name: Checkout Action Repository
+        uses: actions/checkout@v4
       - name: Checkout Test Repository
         uses: actions/checkout@v4
         with:
           repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
           submodules: 'recursive'
+          path: test-project
       - name: Test Publish to Pages
-        uses: Reloaded-Project/devops-mkdocs@v1
+        uses: ./
         with:
+          config-file: test-project/mkdocs.yml
+          requirements: test-project/docs/requirements.txt
           publish-to-pages: true
           checkout-current-repo: false
