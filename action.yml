@@ -1,8 +1,8 @@
 name: Build and Deploy MkDocs Material (Reloaded)
 description: Builds and/or Deploys MkDocs Material to GitHub Pages, or a Directory
 branding:
-  icon: 'book'
-  color: 'red'
+  icon: "book"
+  color: "red"
 
 inputs:
   mkdocs-version:
@@ -83,7 +83,15 @@ runs:
 
     - name: Build MkDocs Site
       shell: bash
-      run: mkdocs build --config-file "${{ inputs.config-file }}" --site-dir "${{ inputs.output-directory }}"
+      run: |
+        # Build to temp location (mkdocs interprets --site-dir relative to config file)
+        CONFIG_DIR=$(dirname "${{ inputs.config-file }}")
+        TEMP_DIR="${CONFIG_DIR}/.mkdocs-build-temp"
+        rm -rf "$TEMP_DIR"
+        mkdocs build --config-file "${{ inputs.config-file }}" --site-dir ".mkdocs-build-temp"
+        # Move to user's desired output directory (relative to workspace root)
+        rm -rf "${{ inputs.output-directory }}"
+        mv "$TEMP_DIR" "${{ inputs.output-directory }}"
 
     - name: Upload pages artifact
       if: ${{ inputs.publish-to-pages == 'true' }}
