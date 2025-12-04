@@ -18,9 +18,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Action Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Checkout Test Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
           submodules: 'recursive'
@@ -40,9 +40,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Action Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Checkout Test Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
           submodules: 'recursive'
@@ -63,9 +63,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Action Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Checkout Test Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
           submodules: 'recursive'
@@ -94,9 +94,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Action Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Checkout Test Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
           submodules: 'recursive'
@@ -125,9 +125,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Action Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Checkout Test Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
           submodules: 'recursive'
@@ -155,9 +155,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Action Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Checkout Test Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
           submodules: 'recursive'
@@ -180,9 +180,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Action Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Checkout Test Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
           submodules: 'recursive'
@@ -207,9 +207,9 @@ jobs:
       id-token: write
     steps:
       - name: Checkout Action Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Checkout Test Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: Reloaded-Project/Reloaded.MkDocsMaterial.Themes.R2
           submodules: 'recursive'
